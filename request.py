@@ -19,7 +19,7 @@ def get_sessions(show_id) -> list | None:
 
 
 # 根据场次id获取座位信息
-def get_seat_plans(show_id, session_id) -> list | None:
+def get_seat_plans(show_id, session_id) -> list:
     headers = {
         'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Mobile Safari/537.36',
         'Content-Type': 'application/json'
@@ -29,12 +29,11 @@ def get_seat_plans(show_id, session_id) -> list | None:
     if response["statusCode"] == 200:
         return response["data"]["seatPlans"]
     else:
-        print("get_seat_plans异常:" + str(response))
-    return None
+        raise Exception("get_seat_plans异常:" + str(response))
 
 
 # 获取座位余票
-def get_seat_count(show_id, session_id) -> list | None:
+def get_seat_count(show_id, session_id) -> list:
     headers = {
         'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Mobile Safari/537.36',
         'Content-Type': 'application/json'
@@ -44,8 +43,7 @@ def get_seat_count(show_id, session_id) -> list | None:
     if response["statusCode"] == 200:
         return response["data"]["seatPlans"]
     else:
-        print("get_seat_count异常:" + str(response))
-    return None
+        raise Exception("get_seat_count异常:" + str(response))
 
 
 # 获取门票类型（快递送票EXPRESS,电子票E_TICKET,现场取票VENUE,电子票或现场取票VENUE_E）
@@ -81,8 +79,7 @@ def get_deliver_method(show_id, session_id, seat_plan_id, price: int, qty: int) 
     if response["statusCode"] == 200:
         return response["data"]["supportDeliveries"][0]["name"]
     else:
-        print("get_deliver_method异常:" + str(response))
-        raise Exception("获取门票类型异常")
+        raise Exception("获取门票类型异常:" + str(response))
 
 
 # 获取观演人信息
@@ -152,8 +149,7 @@ def get_express_fee(show_id, session_id, seat_plan_id, price: int, qty: int, loc
     if response["statusCode"] == 200:
         return response["data"][0]
     else:
-        print("get_express_fee异常:" + str(response))
-        raise Exception("获取快递费异常")
+        raise Exception("获取快递费异常:" + str(response))
 
 
 # 提交订单（快递送票EXPRESS,电子票E_TICKET,现场取票VENUE,电子票或现场取票VENUE_E）
@@ -332,13 +328,11 @@ def create_order(show_id, session_id, seat_plan_id, price: int, qty: int, delive
             ]
         }
     else:
-        print("不支持的deliver_method:" + deliver_method)
-        raise
+        raise Exception("不支持的deliver_method:" + str(deliver_method))
 
     url = "https://m.piaoxingqiu.com/cyy_gatewayapi/trade/buyer/order/v3/create_order"
     response = requests.post(url=url, headers=headers, json=data).json()
     if response["statusCode"] == 200:
         print("下单成功！请尽快支付！")
     else:
-        print("下单异常:" + str(response))
-        raise Exception("下单异常")
+        raise Exception("下单异常:" + str(response))

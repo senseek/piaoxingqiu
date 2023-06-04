@@ -32,13 +32,9 @@ while True:
                         print("未获取到在售状态且符合购票数量需求的session_id")
                         session_id_exclude = []  # 再给自己一次机会，万一被排除掉的场次又放票了呢
         # 获取座位余票信息，默认从最低价开始
-        # 此处为了防止调接口异常，就死循环，直到拿到seat_plans列表和seat_count列表
-        while True:
-            seat_plans = request.get_seat_plans(show_id, session_id)
-            seat_count = request.get_seat_count(show_id, session_id)
-            if seat_plans and seat_count:
-                print(seat_count)
-                break
+        seat_plans = request.get_seat_plans(show_id, session_id)
+        seat_count = request.get_seat_count(show_id, session_id)
+        print(seat_count)
 
         for i in seat_count:
             if i["canBuyCount"] >= buy_count:
