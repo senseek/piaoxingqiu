@@ -251,6 +251,7 @@ def create_order(show_id, session_id, seat_plan_id, price: int, qty: int, delive
                     }
                 }
             ],
+            "one2oneAudiences": [{"audienceId": i, "sessionId": session_id} for i in audience_ids],
             "many2OneAudience": {
                 "audienceId": audience_ids[0],
                 "sessionIds": [
